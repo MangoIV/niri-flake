@@ -172,7 +172,7 @@
                           return "${version-string attrs src}".into();
                       ''
                     ];
-                  buildInputs = [libxkbcommon libinput mesa libglvnd wayland pixman];
+                  buildInputs = [libxkbcommon libinput mesa libglvnd wayland pixman ];
 
                   # we want backtraces to be readable
                   dontStrip = true;
@@ -230,6 +230,7 @@
       libinput ? pkgs.libinput,
       libxkbcommon ? pkgs.libxkbcommon,
       pango ? pkgs.pango,
+      libdisplay-info ? pkgs.libdisplay-info,
     }: let
       manifest = builtins.fromTOML (builtins.readFile "${src}/Cargo.toml");
       workspace-version = manifest.workspace.package.version;
@@ -254,6 +255,7 @@
           mesa
           libglvnd
           seatd
+          libdisplay-info 
           libinput
           libxkbcommon
           pango
@@ -564,7 +566,7 @@
                 environment.systemPackages = [cfg.package];
                 xdg.portal = {
                   enable = true;
-                  extraPortals = [pkgs.xdg-desktop-portal-gnome];
+                  extraPortals = with pkgs; [xdg-desktop-portal-gnome  xdg-desktop-portal-gtk];
                   configPackages = [cfg.package];
                 };
 
@@ -618,7 +620,7 @@
               services.gnome-keyring.enable = true;
               xdg.portal = {
                 enable = true;
-                extraPortals = [pkgs.xdg-desktop-portal-gnome];
+                extraPortals = with pkgs; [xdg-desktop-portal-gnome xdg-desktop-portal-gtk];
                 configPackages = [cfg.package];
               };
             };
